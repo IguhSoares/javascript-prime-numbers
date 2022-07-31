@@ -2,7 +2,7 @@
 
 Algumas funções para testar se um número é primo ou gerar uma lista de números primos.
 
-Criado com o intuito de praticar a linguagem Javascript. :nerd_face:
+Criado com o intuito de praticar a linguagem Javascript. :)
 
 
 ### Descrição
