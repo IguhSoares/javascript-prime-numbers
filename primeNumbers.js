@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 function multipleOf(num1, num2) {
   return Math.max(num1, num2) % Math.min(num1, num2) === 0 ? true : false;
 }
