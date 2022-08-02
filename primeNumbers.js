@@ -45,6 +45,10 @@ function verifyPrimeNumber(number, upTo = null, outputType = 'string') {
   if (primes.length === 0) {
     return true;
   }
+  if (!generatingListOfPrimes) {
+    // number is not a multiple of any prime <= sqrt(number)
+    return true;
+  }
 
   var tmp = [];
   let num = null;
