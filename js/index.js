@@ -156,13 +156,16 @@ const start = () => {
   initInputHandlers();
 
   $('#verify-number-input').on('change', event => {
-    handleInputChange(event.target, number => {
+    handleInputChange(event.target, (number, resultArea) => {
       number = validateInput(number);
       let result = cachedPrimes(number).isPrime;
 
       let msg = `${number} `;
       if (result === false) {
         msg += 'não ';
+        resultArea.removeClass('success');
+      } else {
+        resultArea.addClass('success');
       }
       msg += 'é um número primo';
 
