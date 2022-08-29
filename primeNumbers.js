@@ -2,6 +2,165 @@ function multipleOf(num1, num2) {
   return Math.max(num1, num2) % Math.min(num1, num2) === 0 ? true : false;
 }
 
+const arrayToObject = array => {
+  let obj = {};
+  for (let n of array.values()) {
+    obj[n] = n;
+  }
+  return obj;
+};
+
+function testPrimality(number, exportPrimesList = false, primesList = false) {
+  if (number <= 1) {
+    return false;
+  }
+  if (!exportPrimesList && number !== 2 && number % 2 === 0) {
+    return false;
+  }
+
+  primesList = primesList || {};
+
+  let numbersToTest = [2];
+  for (let n = 3; n <= number; n += 2) {
+    numbersToTest.push(n);
+  }
+
+  let limit = number ** 0.5;
+  for (let i = 0; numbersToTest[i] <= limit; i++) {
+    let num = numbersToTest[i];
+
+    if (primesList[num] || testPrimality(num, true, primesList)) {
+      if (!exportPrimesList && multipleOf(number, num)) {
+        return false;
+      }
+      primesList[num] = num;
+      numbersToTest = numbersToTest.filter(n => !multipleOf(num, n));
+      i = -1;
+    }
+  }
+
+  primesList = { ...primesList, ...arrayToObject(numbersToTest) };
+
+  let isPrime = primesList[number] ? true : false;
+
+  return exportPrimesList ? { isPrime, primesList } : isPrime;
+}
+
+const memoizePrimesList = () => {
+  let primeNumbersCache = {};
+
+  return number => {
+    isValidNumber(number);
+    let result = { primesList: primeNumbersCache };
+
+    if (primeNumbersCache[number]) {
+      result.isPrime = true;
+    } else {
+      let lastPrimeInTheList = Object.values(primeNumbersCache).pop();
+
+      if (lastPrimeInTheList && number < lastPrimeInTheList) {
+        result.isPrime = false;
+      }
+    }
+
+    if (result.isPrime !== undefined) {
+      return result;
+    }
+
+    result = testPrimality(number, true, primeNumbersCache);
+    primeNumbersCache = result.primesList;
+    return result;
+  };
+};
+
+const cachedPrimes = memoizePrimesList();
+
+const primeNumbersUpTo = number => {
+  let primesList = cachedPrimes(number).primesList;
+
+  return Object.values(primesList).filter(n => n <= number);
+};
+
+const setsDifference = (setA, setB) => {
+  let result = new Set(setA);
+
+  for (let n of setB) {
+    if (setA.has(n)) {
+      result.delete(n);
+    } else {
+      result.add(n);
+    }
+  }
+
+  return result;
+};
+
+function primeNumbersListBetween(from, to) {
+  let list1 = new Set(primeNumbersUpTo(from));
+  let list2 = new Set(primeNumbersUpTo(to));
+
+  let result = [...setsDifference(list1, list2)];
+  let min = Math.min(from, to);
+
+  if (cachedPrimes(min).isPrime) {
+    result.unshift(min);
+  }
+
+  return result;
+}
+
+function firstNPrimes(number) {
+  isValidNumber(number);
+  if (number === 0) {
+    return [];
+  }
+  let digits = (number + '').length;
+  let factor = 3 * 2 ** (digits - 1);
+
+  let listOfPrimes = primeNumbersUpTo(number * factor);
+  listOfPrimes.splice(number);
+  return listOfPrimes;
+}
+
+class InvalidArgumentError extends Error {
+  constructor(message) {
+    super();
+    this.message = message;
+    this.name = 'InvalidArgumentError';
+  }
+}
+
+function isValidNumber(number) {
+  if (typeof number !== 'number') {
+    throw new TypeError(
+      `Argument should be a number. Current type: ${typeof number}`
+    );
+  } else if (!Number.isInteger(number) || number < 0) {
+    let message = `Only positive integers are allowed. Current value: ${number}`;
+    throw new InvalidArgumentError(message);
+  }
+  return true;
+}
+
+// module.exports = {
+//   InvalidArgumentException,
+//   isValidNumber,
+//   testPrimality,
+//   primeNumbersUpTo,
+//   cachedPrimes,
+//   primeNumbersListBetween,
+//   firstNPrimes,
+// };
+
+export {
+  primeNumbersUpTo,
+  cachedPrimes,
+  primeNumbersListBetween,
+  firstNPrimes,
+  InvalidArgumentError,
+  isValidNumber,
+};
+
 function verifyPrimeNumber(number, upTo = null, outputType = 'string') {
   if (!['array', 'string'].includes(outputType)) {
     throw new InvalidArgumentException(
@@ -43,10 +202,6 @@ function verifyPrimeNumber(number, upTo = null, outputType = 'string') {
     primes.push(i);
   }
   if (primes.length === 0) {
-    return true;
-  }
-  if (!generatingListOfPrimes) {
-    // number is not a multiple of any prime <= sqrt(number)
     return true;
   }
 
@@ -131,9 +286,4 @@ function validate(num) {
       'Apenas números inteiros positivos serão computados.';
   }
   return response;
-}
-
-function InvalidArgumentException(message) {
-  this.message = message;
-  this.name = 'InvalidArgumentException';
 }

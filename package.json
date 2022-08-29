@@ -1,0 +1,31 @@
+{
+  "name": "prime-numbers",
+  "version": "1.0.0",
+  "description": "A prime number verifier and list of prime numbers generator",
+  "main": "primeNumbers.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IguhSoares/javascript-prime-numbers.git"
+  },
+  "keywords": [
+    "prime number",
+    "prime numbers",
+    "list of prime numbers"
+  ],
+  "author": "iguhSoares",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IguhSoares/javascript-prime-numbers/issues"
+  },
+  "homepage": "https://github.com/IguhSoares/javascript-prime-numbers#readme",
+  "dependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.0.0"
+  }
+}

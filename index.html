@@ -1,24 +1,89 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <title>Verificador de Números Primos</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Números Primos</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      defer
+    ></script>
+    <script src="./js/index.js" type="module" defer></script>
   </head>
   <body>
-    <div
-      id="readme-md"
-      style="display: flex; width: 50%; margin: auto; align-items: center"
-    >
-      <!-- Lightweight client-side loader that feature-detects and load polyfills only when necessary -->
-      <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2/webcomponents-loader.min.js"></script>
-      <!-- Load the element definition -->
-      <script
-        type="module"
-        src="https://cdn.jsdelivr.net/gh/zerodevx/zero-md@1/src/zero-md.min.js"
-      ></script>
-      <!-- Simply set the `src` attribute to your MD file and win -->
-      <zero-md src="README.md" style="min-width: 100%"></zero-md>
-    </div>
+    <main>
+      <section id="verify-number" class="wrapper">
+        <p>
+          <label for="verify-number-input">
+            Verificar se
+            <input
+              id="verify-number-input"
+              name="verify-number"
+              type="text"
+              placeholder="número"
+            />
+            é primo<span id="verify-number-punctuation">.</span>
+          </label>
+        </p>
+        <p
+          id="verify-number-result-p"
+          class="js-result"
+          style="display: none"
+        ></p>
+      </section>
+      <section class="wrapper">
+        <p id="generate-list-p">
+          <label for="generate-list-from-input">
+            Gerar uma lista de números primos entre
+            <input
+              id="generate-list-from-input"
+              class="generate-list-input"
+              type="text"
+              name="generate-list-from"
+              placeholder="início"
+            />
+          </label>
+          <label for="generate-list-to-input">
+            e
+            <input
+              id="generate-list-to-input"
+              class="generate-list-input"
+              type="text"
+              name="generate-list-to"
+              placeholder="fim"
+            />
+            <span id="generate-list-punctuation">.</span>
+          </label>
+        </p>
+        <p
+          id="generate-list-result-p"
+          class="js-result listResult"
+          style="display: none"
+        ></p>
+      </section>
+      <section class="wrapper">
+        <p id="generate-first-n-primes-p">
+          <label for="generate-first-n-primes-input">
+            Listar os primeiros
+            <input
+              type="text"
+              class="generate-list-input"
+              name="generate-first-n-primes"
+              id="generate-first-n-primes-input"
+              placeholder="N"
+            />
+            números primos
+            <span id="generate-first-n-primes-punctuation">.</span>
+          </label>
+        </p>
+        <p
+          id="generate-first-n-primes-result-p"
+          class="js-result listResult"
+          style="display: none"
+        ></p>
+      </section>
+    </main>
   </body>
-  <script src="primeNumbers.js"></script>
 </html>
