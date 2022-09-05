@@ -5,14 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Números Primos</title>
+    <link href="./assets/fontawesome/css/fontawesome.css" rel="stylesheet" />
+    <link href="./assets/fontawesome/css/solid.css" rel="stylesheet" />
+    <link href="./assets/fontawesome/css/svg-with-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="./css/style.css" />
-    <script
-      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-      defer
-    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="./assets/fontawesome/js/fontawesome.js"></script>
+    <script src="./assets/fontawesome/js/solid.js"></script>
     <script src="./js/index.js" type="module" defer></script>
   </head>
   <body>
+    <i
+      title="Ocultar/Exibir Resultado"
+      data-fa-symbol="collapse"
+      class="fa-solid fa-angles-up fa-fw"
+    ></i>
+    <i
+      title="Limpar Resultado"
+      data-fa-symbol="close"
+      class="fa-solid fa-xmark"
+    ></i>
+
     <main>
       <section id="verify-number" class="wrapper">
         <p>
@@ -27,13 +40,25 @@
             é primo<span id="verify-number-punctuation">.</span>
           </label>
         </p>
+
+        <div class="icons-wrapper" style="display: none">
+          <span class="icon-spacer">
+            <svg class="icon" type="toggle">
+              <use xlink:href="#collapse"></use>
+            </svg>
+          </span>
+          <span class="icon-spacer">
+            <svg class="icon" type="close"><use xlink:href="#close"></use></svg
+          ></span>
+        </div>
+
         <p
           id="verify-number-result-p"
           class="js-result"
           style="display: none"
         ></p>
       </section>
-      <section class="wrapper">
+      <section id="generate-list" class="wrapper">
         <p id="generate-list-p">
           <label for="generate-list-from-input">
             Gerar uma lista de números primos entre
@@ -57,13 +82,24 @@
             <span id="generate-list-punctuation">.</span>
           </label>
         </p>
+        <div class="icons-wrapper" style="display: none">
+          <span class="icon-spacer">
+            <svg class="icon" type="toggle">
+              <use xlink:href="#collapse"></use>
+            </svg>
+          </span>
+
+          <span class="icon-spacer">
+            <svg class="icon" type="close"><use xlink:href="#close"></use></svg>
+          </span>
+        </div>
         <p
           id="generate-list-result-p"
           class="js-result listResult"
           style="display: none"
         ></p>
       </section>
-      <section class="wrapper">
+      <section id="generate-first-n-primes" class="wrapper">
         <p id="generate-first-n-primes-p">
           <label for="generate-first-n-primes-input">
             Listar os primeiros
@@ -78,6 +114,16 @@
             <span id="generate-first-n-primes-punctuation">.</span>
           </label>
         </p>
+        <div class="icons-wrapper" style="display: none">
+          <span class="icon-spacer">
+            <svg class="icon" type="toggle">
+              <use xlink:href="#collapse"></use>
+            </svg>
+          </span>
+          <span class="icon-spacer">
+            <svg class="icon" type="close"><use xlink:href="#close"></use></svg>
+          </span>
+        </div>
         <p
           id="generate-first-n-primes-result-p"
           class="js-result listResult"

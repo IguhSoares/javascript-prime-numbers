@@ -131,14 +131,20 @@ class InvalidArgumentError extends Error {
 }
 
 function isValidNumber(number) {
+  let message = '';
+  let limit = 20_000_000;
+
   if (typeof number !== 'number') {
-    throw new TypeError(
-      `Argument should be a number. Current type: ${typeof number}`
-    );
+    message = `Argument should be a number. Current type: ${typeof number}`;
+    throw new TypeError(message);
   } else if (!Number.isInteger(number) || number < 0) {
-    let message = `Only positive integers are allowed. Current value: ${number}`;
+    message = `Only positive integers are allowed. Current value: ${number}`;
+    throw new InvalidArgumentError(message);
+  } else if (number > limit) {
+    message = `Number too large. Only numbers less than or equal to ${limit} are allowed`;
     throw new InvalidArgumentError(message);
   }
+
   return true;
 }
 
