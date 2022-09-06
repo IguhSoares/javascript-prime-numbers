@@ -28,13 +28,13 @@ class Message {
     messageArea.addClass(type);
 
     const sectionID = messageArea.parent().attr('id');
-    togglePeriod(sectionID, ':');
+    togglePunctuationMark(sectionID, ':');
     toggleIcons(sectionID, 'hide');
 
     messageArea.slideDown('slow', async () => {
       await asyncTimeout(2000);
       messageArea.slideUp('slow', () => {
-        togglePeriod(sectionID, '.');
+        togglePunctuationMark(sectionID, '.');
         messageArea.empty();
       });
       await asyncTimeout(2000);
@@ -47,7 +47,7 @@ class Message {
 }
 
 function validateInput(value, message = 'Digite um número inteiro positivo.') {
-  let parsedValue = parseInt(value);
+  const parsedValue = parseInt(value);
 
   if (value.match(/\D+/)) {
     throw new InvalidArgumentError(message);
@@ -67,7 +67,7 @@ function validateInput(value, message = 'Digite um número inteiro positivo.') {
   return parsedValue;
 }
 
-const togglePeriod = (sectionID, char) => {
+const togglePunctuationMark = (sectionID, char) => {
   const element = $(`span[id*="${sectionID}"]`);
   const punctuationMark = element.text();
   if (punctuationMark !== char) {
@@ -95,7 +95,7 @@ function renderConfirmationArea(params, fn) {
   $(`#${sectionID} input`).prop('disabled', true);
   toggleIcons(sectionID, 'hide');
 
-  let confirmBtn = $('<button>')
+  const confirmBtn = $('<button>')
     .attr({
       id: `${sectionID}-confirm-btn`,
       class: 'button',
@@ -103,9 +103,9 @@ function renderConfirmationArea(params, fn) {
       text: 'Confirmar',
     })
     .html('Confirmar')
-    .on('click', event => handleBtnClick(event, params, fn));
+    .click(event => handleBtnClick(event, params, fn));
 
-  let cancelBtn = $('<button>')
+  const cancelBtn = $('<button>')
     .attr({
       id: `${sectionID}-cancel-btn`,
       class: 'button',
@@ -113,12 +113,12 @@ function renderConfirmationArea(params, fn) {
       text: 'Cancelar',
     })
     .html('Cancelar')
-    .on('click', event => handleBtnClick(event, params, fn));
+    .click(event => handleBtnClick(event, params, fn));
 
-  let span = $('<span>').addClass('btn-wrapper');
+  const span = $('<span>').addClass('btn-wrapper');
   span.append(confirmBtn).append(cancelBtn);
 
-  let div = $('<div>')
+  const div = $('<div>')
     .attr({
       class: 'largeNumbersMsg msg error',
     })
@@ -145,10 +145,7 @@ function handleBtnClick(event, params, fn) {
     $(`#${sectionID} .js-result`)
       .removeClass('success error')
       .text('Calculando...')
-      .slideDown('slow');
-    window.setTimeout(() => {
-      calculateAndDisplay(params, fn);
-    }, 500);
+      .slideDown('slow', () => calculateAndDisplay(params, fn));
   } else if (action === 'cancel') {
     cleanInput(sectionID);
   }
@@ -166,26 +163,26 @@ function calculateAndDisplay(params, fn) {
     resultArea.attr('value') !== params.inputValuesArray + '' ||
     !resultArea.is(':visible')
   ) {
-    try {
-      const msg = fn(...params.inputValuesArray, resultArea);
+    resultArea
+      .hide()
+      .removeClass('success error')
+      .text('Calculando...')
+      .slideDown('slow', () => {
+        try {
+          const msg = fn(...params.inputValuesArray, resultArea);
 
-      resultArea.hide();
-      resultArea.text(msg);
+          resultArea.fadeOut(() => resultArea.text(msg).fadeIn('slow'));
 
-      togglePeriod(sectionID, ':');
-      toggleIcons(sectionID, 'show');
+          togglePunctuationMark(sectionID, ':');
+          toggleIcons(sectionID, 'show');
 
-      resultArea.slideDown('slow');
-      resultArea.attr('value', params.inputValuesArray);
-    } catch (error) {
-      Message.display('error', error.message, resultArea);
-    }
+          resultArea.attr('value', params.inputValuesArray);
+        } catch (error) {
+          Message.display('error', error.message, resultArea);
+        }
+      });
   }
 }
-
-const hasLargeNumber = inputValues => {
-  return inputValues.some(number => number >= LIMIT) ? true : false;
-};
 
 const getNumberToCalculate = number => {
   const digits = (number + '').length;
@@ -195,11 +192,9 @@ const getNumberToCalculate = number => {
 };
 
 const handleInputChange = (sectionID, fn) => {
-  let inputValuesArray = [];
-
-  for (const input of $(`#${sectionID} input`)) {
-    inputValuesArray.push($(input).val());
-  }
+  let inputValuesArray = $.map($(`#${sectionID} input`), input =>
+    $(input).val()
+  );
 
   const resultArea = $(`#${sectionID} .js-result`);
 
@@ -207,11 +202,7 @@ const handleInputChange = (sectionID, fn) => {
     cleanResultArea(sectionID);
   } else {
     try {
-      const tmp = [];
-      inputValuesArray.forEach(number => {
-        tmp.push(validateInput(number));
-      });
-      inputValuesArray = tmp;
+      inputValuesArray = inputValuesArray.map(number => validateInput(number));
     } catch (error) {
       Message.display('error', error.message, resultArea);
       return false;
@@ -219,10 +210,10 @@ const handleInputChange = (sectionID, fn) => {
 
     const valuesToCheckLimit =
       sectionID === 'generate-first-n-primes'
-        ? [getNumberToCalculate(inputValuesArray[0])]
+        ? [getNumberToCalculate(...inputValuesArray)]
         : inputValuesArray;
 
-    const action = hasLargeNumber(valuesToCheckLimit)
+    const action = valuesToCheckLimit.some(number => number >= LIMIT)
       ? renderConfirmationArea
       : calculateAndDisplay;
 
@@ -236,16 +227,10 @@ const handleInputChange = (sectionID, fn) => {
   }
 };
 
-const checkInputValidity = input => {
-  let value = input.val();
-  if (value !== '' && value.match(/\D+/) !== null) {
-    return false;
-  }
-  return true;
-};
+const containsNonDigitCharacter = input => input.val().match(/\D+/) !== null;
 
 function handleInputInput(input, msg = 'Digite um número inteiro positvo.') {
-  if (!checkInputValidity(input)) {
+  if (containsNonDigitCharacter(input)) {
     input.get(0).setCustomValidity(msg);
     input.get(0).reportValidity();
     input.attr('style', 'border-color: var(--invalid-input-border)');
@@ -256,7 +241,7 @@ function handleInputInput(input, msg = 'Digite um número inteiro positvo.') {
 }
 
 const primalityCheck = (number, resultArea) => {
-  let result = number <= 1 ? false : cachedPrimes(number).isPrime;
+  const result = number <= 1 ? false : cachedPrimes(number).isPrime;
 
   let msg = `${number} `;
   if (result === false) {
@@ -293,7 +278,7 @@ const initInputs = inputs => {
 
 const cleanResultArea = sectionID => {
   const resultArea = $(`#${sectionID} .js-result`);
-  togglePeriod(sectionID, '.');
+  togglePunctuationMark(sectionID, '.');
   toggleIcons(sectionID, 'hide');
   resultArea.slideUp('slow', () => resultArea.html(''));
 };
