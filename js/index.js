@@ -161,18 +161,25 @@ function cleanInput(sectionID) {
 function calculateAndDisplay(params, fn) {
   const sectionID = params.sectionID;
   const resultArea = $(`#${sectionID} .js-result`);
-  try {
-    const msg = fn(...params.inputValuesArray, resultArea);
 
-    resultArea.hide();
-    resultArea.text(msg);
+  if (
+    resultArea.attr('value') !== params.inputValuesArray + '' ||
+    !resultArea.is(':visible')
+  ) {
+    try {
+      const msg = fn(...params.inputValuesArray, resultArea);
 
-    togglePeriod(sectionID, ':');
-    toggleIcons(sectionID, 'show');
+      resultArea.hide();
+      resultArea.text(msg);
 
-    resultArea.slideDown('slow');
-  } catch (error) {
-    Message.display('error', error.message, resultArea);
+      togglePeriod(sectionID, ':');
+      toggleIcons(sectionID, 'show');
+
+      resultArea.slideDown('slow');
+      resultArea.attr('value', params.inputValuesArray);
+    } catch (error) {
+      Message.display('error', error.message, resultArea);
+    }
   }
 }
 
