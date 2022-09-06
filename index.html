@@ -10,8 +10,8 @@
     <link href="./assets/fontawesome/css/svg-with-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="./css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="./assets/fontawesome/js/fontawesome.js"></script>
-    <script src="./assets/fontawesome/js/solid.js"></script>
+    <script src="./assets/fontawesome/js/fontawesome.js" defer></script>
+    <script src="./assets/fontawesome/js/solid.js" defer></script>
     <script src="./js/index.js" type="module" defer></script>
   </head>
   <body>
@@ -31,12 +31,7 @@
         <p>
           <label for="verify-number-input">
             Verificar se
-            <input
-              id="verify-number-input"
-              name="verify-number"
-              type="text"
-              placeholder="número"
-            />
+            <input id="verify-number-input" type="text" placeholder="número" />
             é primo<span id="verify-number-punctuation">.</span>
           </label>
         </p>
@@ -52,21 +47,16 @@
           ></span>
         </div>
 
-        <p
-          id="verify-number-result-p"
-          class="js-result"
-          style="display: none"
-        ></p>
+        <p class="js-result" style="display: none"></p>
       </section>
       <section id="generate-list" class="wrapper">
-        <p id="generate-list-p">
+        <p>
           <label for="generate-list-from-input">
             Gerar uma lista de números primos entre
             <input
               id="generate-list-from-input"
               class="generate-list-input"
               type="text"
-              name="generate-list-from"
               placeholder="início"
             />
           </label>
@@ -76,7 +66,6 @@
               id="generate-list-to-input"
               class="generate-list-input"
               type="text"
-              name="generate-list-to"
               placeholder="fim"
             />
             <span id="generate-list-punctuation">.</span>
@@ -93,20 +82,15 @@
             <svg class="icon" type="close"><use xlink:href="#close"></use></svg>
           </span>
         </div>
-        <p
-          id="generate-list-result-p"
-          class="js-result listResult"
-          style="display: none"
-        ></p>
+        <p class="js-result listResult" style="display: none"></p>
       </section>
       <section id="generate-first-n-primes" class="wrapper">
-        <p id="generate-first-n-primes-p">
+        <p>
           <label for="generate-first-n-primes-input">
             Listar os primeiros
             <input
               type="text"
               class="generate-list-input"
-              name="generate-first-n-primes"
               id="generate-first-n-primes-input"
               placeholder="N"
             />
@@ -124,11 +108,7 @@
             <svg class="icon" type="close"><use xlink:href="#close"></use></svg>
           </span>
         </div>
-        <p
-          id="generate-first-n-primes-result-p"
-          class="js-result listResult"
-          style="display: none"
-        ></p>
+        <p class="js-result listResult" style="display: none"></p>
       </section>
     </main>
   </body>

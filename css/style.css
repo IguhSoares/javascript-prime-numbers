@@ -38,7 +38,7 @@ body {
 
 main {
   margin: 0 auto;
-  width: 600px;
+  width: 480px;
   padding: 2em 0;
   font-family: Roboto, Verdana, Geneva, Tahoma, sans-serif;
   display: flex;
@@ -54,6 +54,11 @@ p {
   line-height: 1.5em;
   margin-bottom: 0;
   margin-top: 2em;
+  text-align: center;
+}
+
+#generate-list p:first-child {
+  margin: 0 5em;
 }
 
 section.wrapper {
@@ -92,8 +97,13 @@ input:focus {
   outline: 3px solid transparent;
 }
 
-#verify-number-input {
-  width: 70px;
+#verify-number input {
+  width: 4.5em;
+  text-align: center;
+}
+
+.generate-list-input {
+  width: 3.2em;
   text-align: center;
 }
 
@@ -101,17 +111,13 @@ input:focus {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
   font-size: 1.2em;
+  text-align: justify;
   background-color: rgba(172, 189, 189, 0.15);
   border-radius: 15px;
   padding: 0.5em;
   margin-top: 0.5em;
   width: fit-content;
-  max-width: 600px;
-}
-
-.generate-list-input {
-  width: 50px;
-  text-align: center;
+  max-width: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -131,8 +137,10 @@ input:focus {
   word-spacing: 0.5em;
   max-height: 50vh;
   overflow-y: auto;
+  overflow-x: hidden;
   text-overflow: ellipsis;
-  padding-right: 10px;
+  padding: 0.5em 1em;
+  max-width: 98%;
 }
 
 .msg {
@@ -201,8 +209,6 @@ input:focus {
 }
 
 .icon:hover {
-  /* box-shadow: 0px 1px 2px rgba(218, 203, 208, 0.75);
-  border-radius: 50%; */
   cursor: pointer;
   width: 1.2em;
   height: 1.2em;
@@ -210,10 +216,8 @@ input:focus {
 
 .collapse {
   transform: rotate(-0deg);
-  /* transition: transform 500ms ease-in-out; */
 }
 
 .expand {
   transform: rotate(180deg);
-  /* transition: transform 500ms ease-in-out; */
 }

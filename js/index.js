@@ -16,33 +16,33 @@ const LIMIT = 1_000_000;
 
 class Message {
   static display(type, message, messageArea) {
-    messageArea.text(`${message}`).hide();
+    /** Displays only if there isn't already a message in MessageArea */
+    if (!messageArea.hasClass(`${type}`)) {
+      messageArea
+        .hide()
+        .removeClass(['success error'].find(name => name !== type))
+        .text(`${message}`)
+        .addClass(`msg ${type}`);
 
-    let isListResult = false;
-    if (messageArea.hasClass('listResult')) {
-      messageArea.removeClass('listResult');
-      isListResult = true;
-    }
+      let isListResult = false;
+      if (messageArea.hasClass('listResult')) {
+        messageArea.removeClass('listResult');
+        isListResult = true;
+      }
 
-    messageArea.addClass('msg');
-    messageArea.addClass(type);
+      const sectionID = messageArea.parent().attr('id');
+      togglePunctuationMark(sectionID, ':');
+      toggleIcons(sectionID, 'hide');
 
-    const sectionID = messageArea.parent().attr('id');
-    togglePunctuationMark(sectionID, ':');
-    toggleIcons(sectionID, 'hide');
+      messageArea.slideDown('slow', async () => {
+        await asyncTimeout(2000);
+        messageArea.slideUp('slow', () =>
+          cleanResultArea(messageArea.parents('section').attr('id'))
+        );
 
-    messageArea.slideDown('slow', async () => {
-      await asyncTimeout(2000);
-      messageArea.slideUp('slow', () => {
-        togglePunctuationMark(sectionID, '.');
-        messageArea.empty();
+        isListResult ? messageArea.addClass('listResult') : null;
       });
-      await asyncTimeout(2000);
-
-      messageArea.removeClass(type);
-      messageArea.removeClass('msg');
-      isListResult ? messageArea.addClass('listResult') : null;
-    });
+    }
   }
 }
 
@@ -91,7 +91,7 @@ const toggleIcons = (sectionID, action) => {
 function renderConfirmationArea(params, fn) {
   const sectionID = params.sectionID;
 
-  $(`#${sectionID} .js-result`).text('').slideUp('slow');
+  $(`#${sectionID} .js-result`).empty().slideUp('slow');
   $(`#${sectionID} input`).prop('disabled', true);
   toggleIcons(sectionID, 'hide');
 
@@ -142,10 +142,7 @@ function handleBtnClick(event, params, fn) {
   $('div.largeNumbersMsg').remove();
 
   if (action === 'confirm') {
-    $(`#${sectionID} .js-result`)
-      .removeClass('success error')
-      .text('Calculando...')
-      .slideDown('slow', () => calculateAndDisplay(params, fn));
+    calculateAndDisplay(params, fn);
   } else if (action === 'cancel') {
     cleanInput(sectionID);
   }
@@ -262,17 +259,15 @@ const listFirstNPrimes = number => firstNPrimes(number).join(' ');
 
 const initInputs = inputs => {
   inputs.forEach((handler, sectionID) => {
-    let element = $(`#${sectionID} input`);
-
-    element.keydown(event => {
-      if (['Enter', 'Tab'].includes(event.key)) {
-        handleInputChange(sectionID, handler);
-      }
-    });
-
-    element.on('input', event => {
-      handleInputInput($(event.target));
-    });
+    $(`#${sectionID} input`)
+      .keydown(event => {
+        if (['Enter', 'Tab'].includes(event.key)) {
+          handleInputChange(sectionID, handler);
+        }
+      })
+      .on('input', event => {
+        handleInputInput($(event.target));
+      });
   });
 };
 
@@ -280,7 +275,9 @@ const cleanResultArea = sectionID => {
   const resultArea = $(`#${sectionID} .js-result`);
   togglePunctuationMark(sectionID, '.');
   toggleIcons(sectionID, 'hide');
-  resultArea.slideUp('slow', () => resultArea.html(''));
+  resultArea.slideUp('slow', () =>
+    resultArea.empty().removeClass('msg success error')
+  );
 };
 
 const closeResult = sectionID => {
@@ -305,6 +302,7 @@ const toggleResult = sectionID => {
 
 const initIcons = () => {
   $('.icon').click(event => {
+    /** Sometimes the event will be trigged by the child element <use> */
     const icon = $(event.target).is('use')
       ? $(event.target).parent()
       : $(event.target);
